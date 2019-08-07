@@ -1,4 +1,4 @@
-from random import getrandbits as randbool
+#from random import getrandbits as randbool
 from random import randint
 from datetime import timedelta
 from datetime import datetime
@@ -6,7 +6,7 @@ import asyncio
 import pickle
 import difflib
 import csv      # for importing cards
-from shlex import split as parseLine
+#from shlex import split as parseLine
 import discord
 from getAlpha import nextItemAlphabetical as nextPlayer
 from getAlpha import lastItemAlphabetical as lastPlayer
@@ -77,7 +77,7 @@ async def on_message(message):
     global turnsReversed
     global extraDeck
 
-    if !message.content.startswith("!"):
+    if not message.content.startswith("!"):
         #message is not a command
         return
     elif message.author.bot:
