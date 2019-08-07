@@ -45,7 +45,8 @@ def log(strin):
     fi.close()
 
 def isRightChannel(message):
-    return message.channel.id == 545368307570573324 or message.channel.id == 601892112245719041
+    #return message.channel.id == 545368307570573324 or message.channel.id == 601892112245719041
+    return message.channel.id == 595427470430437412
 
 def isPlayer(message):
     global playersAll
@@ -120,7 +121,7 @@ async def on_message(message):
     allows change to the python gamestate
 """)
     elif message.content.startswith('!enter') and isRightChannel(message):
-        if isQuitter(message):
+        if gameStarted and isQuitter(message):
             await message.channel.send(message.author.name + " has left and may not return.")
         else:
             if isPlayer(message):
@@ -132,7 +133,8 @@ async def on_message(message):
 
     if message.content.startswith('!leave') and isRightChannel(message):
         if isPlayer(message):
-            playersQuitters[message.author.id] = message.author.name
+            if gameStarted:
+                playersQuitters[message.author.id] = message.author.name
             playersAll.pop(message.author.id)
             await message.channel.send(message.author.name + " has left the game.")
             log("left," + str(message.author.id))
