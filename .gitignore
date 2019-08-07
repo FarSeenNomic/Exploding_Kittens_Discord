@@ -1,0 +1,4 @@
+/__pycache__
+*.p
+*.log
+scanvalid.bat

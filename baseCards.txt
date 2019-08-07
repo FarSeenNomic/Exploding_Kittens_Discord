@@ -1,0 +1,52 @@
+16,Exploding Kitten
+1,Imploding Kitten
+1,Streaking Kitten
+10,Alter the Future x3
+1,Alter the Future x5
+16,Attack x2
+1,Catomic Bomb
+2,Curse of the Cat Butt
+19,Defuse
+7,Double Slap
+11,Draw from the Bottom
+10,Favor
+1,Garbage Collection
+3,Mark
+18,Nope
+8,Reverse
+13,See the Future x3
+1,See the Future x5
+12,Shuffle
+15,Skip
+1,Super Skip
+3,Swap Top and Bottom
+3,Targeted Attack
+2,Triple Slap
+10,Feral Cat
+11,Tacocat
+11,Cattermelon
+11,Hairy Potato Cat
+11,Beard Cat
+11,Rainbow Cat
+4,Bladder Cat
+4,Schrodinger's Cat
+4,Zombie Cat
+4,Bikini Cat
+4,Momma Cat
+3,See the Future x1
+1,Amateur Archaeology
+2,Hip Cat
+5,Plus Plus
+1,Robin Hood
+0,Pucker Up
+0,Twins
+1,The Twins
+1,Hip Bat
+1,Christopher and Steve
+1,Kitten President
+2,Battle Hamster
+1,Caternator
+1,Cat to the Future
+3,The Mad Catter
+1,C.A.T.
+0,Armakitten
