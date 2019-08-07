@@ -377,6 +377,4 @@ async def on_message(message):
         except Exception as e:
             await message.channel.send("I do not know what a(n) '" + args[2] + "' is (error: " + repr(e) + ")")
 
-
-
-client.run('MjY5OTA3NjQ1MjA3NDEyNzM3.D0YoPA.Wmd0AWIlBFgRA7wOiLGBXAPU9f8')
+client.run(open("token","r").read())
