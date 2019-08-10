@@ -178,7 +178,7 @@ async def on_message(message):
 
     elif message.content.startswith('!listPlayers'):
         strSend = "Players" + ("" if len(playersAll) <= 3 else "("+str(len(playersAll))+")")+ ": "
-        strSend += ", ".join(list(playersAll.values()))
+        strSend += ", ".join(sorted(list(playersAll.values())))
         await message.channel.send(strSend)
 
     elif message.content.startswith('!start') and isRightChannel(message) and isPlayer(message):
