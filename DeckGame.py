@@ -7,7 +7,7 @@ import pickle
 import difflib
 import csv      # for importing cards
 #from shlex import split as parseLine
-import discord
+import discord  #pip install pydiscord?
 from getAlpha import nextItemAlphabetical as nextPlayer
 from getAlpha import lastItemAlphabetical as lastPlayer
 import deckObj
@@ -36,7 +36,11 @@ def andMore(names):
     return names[0] + " and " + str(len(names)-1) + " more"
 
 def isAdmin(user):
-    return user.id == 269904594526666754
+    return user.id in [
+        269904594526666754,  #Imanton1
+        #374911198010802179, #Zen, leader of the Menagerie
+        0
+    ]
 
 def log(strin):
     now = datetime.now()
@@ -46,7 +50,12 @@ def log(strin):
 
 def isRightChannel(message):
     #return message.channel.id == 545368307570573324 or message.channel.id == 601892112245719041
-    return message.channel.id == 595427470430437412
+    return message.channel.id in [
+        595427470430437412, #RYL General
+        #601892112245719041, #RYL bot-test
+        #598617801187393762,  #Menagerie General
+        0
+    ]
 
 def isPlayer(message):
     global playersAll
