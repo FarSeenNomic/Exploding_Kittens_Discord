@@ -35,13 +35,13 @@ class KittensGame:
         self.turnsReversed = False
         self.admins = [
             269904594526666754,     #Imanton1
-            374911198010802179,     #Zen, leader of the Menagerie
+            #374911198010802179,    #Zen, leader of the Menagerie
             0
         ]
         self.channels = [
             595427470430437412,     #RYL General
             #601892112245719041,    #RYL bot-test
-            598617801187393762,     #Menagerie General
+            #598617801187393762,    #Menagerie General
             0
         ]
     def isAdmin(self, authorid):
