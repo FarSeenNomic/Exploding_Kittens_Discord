@@ -149,6 +149,9 @@ class KittensGame:
                 for pl in self.playersAll:
                     self.playerCards[pl] = deckObj.DeckKittens() #all players now have a blank deck
                     for count in range(7):
+                        while self.deck.peek() == "Exploding Kitten":
+                            deck.shuffle()
+
                         self.playerCards[pl].pushtop(self.deck.draw())
                     self.playerCards[pl].pushtop("Defuse")
 
