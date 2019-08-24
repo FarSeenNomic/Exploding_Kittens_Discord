@@ -1,11 +1,14 @@
-import deckObj
-import discord  #pip install pydiscord?
 import asyncio
+from datetime import datetime
+import pickle
+import discord  #pip install pydiscord?
 import gameObject
 
 client = discord.Client()
-game = gameObject()
+game = gameObject.KittensGame()
 
+def nocall():
+    asyncio.sleep(1)
 
 def log(strin):
     now = datetime.now()
@@ -29,10 +32,10 @@ async def on_message(message):
         #message is made by a bot
         return
 
-    elif messageContent.startswith('!admin '): #runs code and echos to where it came from
+    elif message.content.startswith('!admin '): #runs code and echos to where it came from
         try:
-            if len(messageContent) >= 7 and isAdmin(authorid):
-                evalStr = str(eval(messageContent[7:]))
+            if len(message.content) >= 7 and game.isAdmin(message.author.id):
+                evalStr = eval(message.content[7:])
                 if evalStr is None:
                     await message.channel.send("Successful.")
                 else:
@@ -43,25 +46,29 @@ async def on_message(message):
             await message.channel.send("oops, an error occured:\n"+str(repr(e)))
             return
 
-    elif messageContent.startswith('!adminto '):   #runs code and echos to where the mention points
+    elif message.content.startswith('!adminto '):   #runs code and echos to where the mention points
         try:
-            if len(messageContent) >= 9 and isAdmin(authorid) and len(message.mentions) == 1:
-                if (message.mentions[0].dm_channel is None):
-                    await message.mentions[0].create_dm()
-                await message.mentions[0].dm_channel.send(eval(messageContent[9:]))
+            if len(message.content) >= 9 and game.isAdmin(message.author.id):
+                evalStr = eval(message.content[9:])
+                if evalStr is None:
+                    evalStr = "Successful."
+                for person in message.mentions:
+                    if (person.dm_channel is None):
+                        await person.create_dm()
+                    await person.dm_channel.send(evalStr)
         except Exception as e:
             print(repr(e))
             await message.channel.send("oops, an error occured:\n"+str(repr(e)))
             return
 
-    elif messageContent.startswith('!save'):
-        if isAdmin(authorid):
+    elif message.content.startswith('!save'):
+        if game.isAdmin(message.author.id):
             pickle.dump(game, open("game.p", "wb"))
             await message.channel.send("Loaded game.")
             return
 
-    elif messageContent.startswith('!load'):
-        if isAdmin(authorid):
+    elif message.content.startswith('!load'):
+        if game.isAdmin(message.author.id):
             game = pickle.load(open("game.p", "rb"))
             await message.channel.send("Loaded game.")
             return
@@ -75,7 +82,8 @@ async def on_message(message):
     # targetted goes to whatever channel it was contacted by.
 
     if (personal is not None):
-        if (message.author.dm_channel is None): await message.author.create_dm()
+        if (message.author.dm_channel is None):
+            await message.author.create_dm()
         await message.author.dm_channel.send(personal)
     if (targeted is not None):
         await message.channel.send(targeted)

@@ -1,15 +1,25 @@
 from random import randint
 from datetime import timedelta
 from datetime import datetime
-import pickle
 import difflib
 import csv      # for importing cards
 from getAlpha import nextItemAlphabetical as nextPlayer
 from getAlpha import lastItemAlphabetical as lastPlayer
 import deckObj
 
+def andMore(names):
+    if len(names) == 0:
+        return ''
+    if len(names) == 1:
+        return names[0]
+    if len(names) == 2:
+        return names[0] + " and " + names[1]
+    if len(names) == 3:
+        return names[0] + ", " + names[1] + " and " + names[2]
+    return names[0] + " and " + str(len(names)-1) + " more"
+
 class KittensGame:
-    __init__(self):
+    def __init__(self):
         self.deck = deckObj.DeckKittens()        # hold all the main cards
         self.discard = deckObj.DeckKittens()     # holds the discards
         self.extraDeck = deckObj.DeckKittens()   # for funging
@@ -23,28 +33,22 @@ class KittensGame:
         self.allCardsUnique = []
         self.tellImplodingKitten = True
         self.turnsReversed = False
-
-    def andMore(self, names):
-        if len(names) == 0: return ''
-        if len(names) == 1: return names[0]
-        if len(names) == 2: return names[0] + " and " + names[1]
-        if len(names) == 3: return names[0] + ", " + names[1] + " and " + names[2]
-        return names[0] + " and " + str(len(names)-1) + " more"
-
-    def isAdmin(self, authorid):
-        return authorid in [
+        self.admins = [
             269904594526666754,  #Imanton1
             #374911198010802179, #Zen, leader of the Menagerie
             0
         ]
-
-    def isRightChannel(self, cid):
-        return cid in [
+        self.channels = [
             595427470430437412, #RYL General
-            #601892112245719041, #RYL bot-test
+            601892112245719041, #RYL bot-test
             #598617801187393762,  #Menagerie General
             0
         ]
+    def isAdmin(self, authorid):
+        return authorid in self.admins
+
+    def isRightChannel(self, cid):
+        return cid in self.channels
 
     def isPlayer(self, authorid):
         return authorid in self.playersAll
@@ -54,7 +58,11 @@ class KittensGame:
 
     def do(self, messageContent, authorid, authorname, channelid):
         """
-        takes a message, authorid
+        takes a messageContent, authorid, authorname, and channelid
+            messageContent is a string with the command
+            authorid is a unique object that identifies a user
+            authorname is a string used for alphabetizing and chatting to a user
+            channelid is used for checking where the message is coming from
         returns None, or a string to send
         in the form [where, string]
         """
@@ -93,18 +101,18 @@ class KittensGame:
 !admin/adminto (admin only)
     allows change to the python gamestate
 """, None)
-        elif messageContent.startswith('!enter') and isRightChannel(channelid):
-            if self.gameStarted and isQuitter(message):
+        elif messageContent.startswith('!enter') and self.isRightChannel(channelid):
+            if self.gameStarted and self.isQuitter(authorid):
                 return (None, authorname + " has left and may not return.")
             else:
-                if isPlayer(authorid):
+                if self.isPlayer(authorid):
                     return (None, authorname + " was already in.")
                 else:
                     self.playersAll[authorid] = authorname
                     return (None, authorname + " has entered the game!")
 
-        elif messageContent.startswith('!leave') and isRightChannel(channelid):
-            if isPlayer(authorid):
+        elif messageContent.startswith('!leave') and self.isRightChannel(channelid):
+            if self.isPlayer(authorid):
                 if self.gameStarted:
                     self.playersQuitters[authorid] = authorname
                 self.playersAll.pop(authorid)
@@ -113,12 +121,16 @@ class KittensGame:
                 return (None, authorname + " is not a player.")
 
         elif messageContent.startswith('!listPlayers'):
-            strSend = "Players" + ("" if len(self.playersAll) <= 3 else "("+str(len(self.playersAll))+")")+ ": "
+            if len(self.playersAll) <= 3:
+                strSend = "Players: "
+            else:
+                strSend = "("+str(len(self.playersAll))+"): "
+
             strSend += ", ".join(sorted(list(self.playersAll.values())))
             return (None, strSend)
 
-        elif messageContent.startswith('!start') and isRightChannel(channelid) and isPlayer(authorid):
-            if isAdmin(authorid):
+        elif messageContent.startswith('!start') and self.isRightChannel(channelid):
+            if self.isAdmin(authorid):
                 if self.gameStarted: return (None, "The game has already started.")
                 if len(self.playersAll) == 0: return (None, "Zero players.")
 
@@ -130,27 +142,29 @@ class KittensGame:
                         self.allCardsUnique.append(row[1])
                         for count in range(int(row[0])):
                             self.deck.pushtop(row[1])
-                self.deck.shuffle()                              # the deck is now initialized with cards
+                self.deck.shuffle()
+                # the deck is now initialized with cards
 
+                # give players cards
                 for pl in self.playersAll:
                     self.playerCards[pl] = deckObj.DeckKittens() #all players now have a blank deck
                     for count in range(7):
                         self.playerCards[pl].pushtop(self.deck.draw())
                     self.playerCards[pl].pushtop("Defuse")
 
-                self.playerCurrent = nextPlayer(list(self.playersAll.values()), "")  #it is the first players turn, so set them
-                self.playerStartTime = datetime()                   #and mark it on the clock
-
-                # give players cards
+                #it is the first players turn, so set them
+                #and mark it on the clock
+                self.playerCurrent = nextPlayer(list(self.playersAll.values()), "")
+                self.playerStartTime = datetime.now()
 
                 self.gameStarted = True
                 return (None, "Now the game truly begins.")
 
-        elif messageContent.startswith('!time') and isPlayer(authorid):
+        elif messageContent.startswith('!time') and self.isPlayer(authorid):
             if not self.gameStarted: return (None, "The game has not started.")
-            return (None, timedelta(seconds=round(datetime() - self.playerStartTime)))
-            
-        elif messageContent.startswith('!draw') and isRightChannel(channelid) and isPlayer(authorid):
+            return (None, timedelta(seconds=round(datetime.now() - self.playerStartTime)))
+
+        elif messageContent.startswith('!draw') and self.isRightChannel(channelid) and self.isPlayer(authorid):
             if not self.gameStarted: return (None, "The game has not started.")
             cardDrawn = self.deck.draw()
             self.playerCards[authorid].pushtop(cardDrawn)
@@ -161,7 +175,7 @@ class KittensGame:
 
             return ("You got a " + cardDrawn, publ)
 
-        elif messageContent.startswith('!play') and isRightChannel(channelid) and isPlayer(authorid):
+        elif messageContent.startswith('!play') and self.isRightChannel(channelid) and self.isPlayer(authorid):
             if not self.gameStarted:
                 return (None, "The game has not started.")
             try:
@@ -182,7 +196,7 @@ class KittensGame:
             except:
                 return (None, "I do not know what a(n) '" + messageContent[6:] + "' is")
 
-        elif messageContent.startswith('!end') and isRightChannel(channelid) and isPlayer(authorid):
+        elif messageContent.startswith('!end') and self.isRightChannel(channelid) and self.isPlayer(authorid):
             if not self.gameStarted:
                 return (None, "The game has not started.")
 
@@ -201,35 +215,33 @@ class KittensGame:
             playerID = list(self.playersAll)[list(self.playersAll.values()).index(self.playerCurrent)]
 
             return (None, "The new current player is now <@" + str(playerID) + ">")
-            log("turnend," + str(authorid))
 
-        elif messageContent.startswith('!listCards') and isPlayer(authorid):
+        elif messageContent.startswith('!listCards') and self.isPlayer(authorid):
             return ("cards: " + ", ".join(self.playerCards[authorid].cards), None)
 
         elif messageContent.startswith('!current'):
             if not self.gameStarted: return (None, "The game has not started.")
             return (None, "The current player is " + self.playerCurrent)
-        """
-        elif messageContent.startswith('!steal') and isRightChannel(channelid) and isPlayer(authorid):
-            if not self.gameStarted:
-                return (None, "The game has not started.")
+#elif messageContent.startswith('!steal') and isRightChannel(channelid) and isPlayer(authorid):
+#    if not self.gameStarted:
+#        return (None, "The game has not started.")
 
-            if self.playerCurrent != self.playersAll[authorid]:
-                return (None, "It is not your turn.")
+#    if self.playerCurrent != self.playersAll[authorid]:
+#        return (None, "It is not your turn.")
 
-            if len(message.mentions) != 1:
-                return (None, "You did not specify a person.")
+#    if len(message.mentions) != 1:
+#        return (None, "You did not specify a person.")
 
-            if len(self.playerCards[message.mentions[0].id]) == 0:
-                return (None, "The person does not have enough cards.")
+#    if len(self.playerCards[message.mentions[0].id]) == 0:
+#        return (None, "The person does not have enough cards.")
 
-            numOfCards = len(self.playerCards[message.mentions[0].id])
-            indexToSteal = randint(0, numOfCards-1)
-            self.playerCards[authorid].pushtop(self.playerCards[message.mentions[0].id].cards.pop(indexToSteal))
+#    numOfCards = len(self.playerCards[message.mentions[0].id])
+#    indexToSteal = randint(0, numOfCards-1)
+#    self.playerCards[authorid].pushtop(
+#       self.playerCards[message.mentions[0].id].cards.pop(indexToSteal))
 
-            return (None, authorname + " stole a card from " + message.mentions[0].name)
-        """
-        elif messageContent.startswith('!handSwap') and isPlayer(authorid):
+#    return (None, authorname + " stole a card from " + message.mentions[0].name)
+        elif messageContent.startswith('!handSwap') and self.isPlayer(authorid):
             args = messageContent.split(" ", 4)
             if len(args) != 3:
                 return (None, "Wrong number of arguments: " + str(len(args) - 1) + " should be 3")
@@ -249,7 +261,7 @@ class KittensGame:
                 print(repr(e))
                 return (None, "oops, an error occured:\n"+str(repr(e)))
 
-        elif messageContent.startswith('!insert ') and isPlayer(authorid):
+        elif messageContent.startswith('!insert ') and self.isPlayer(authorid):
             if not self.gameStarted:
                 return (None, "The game has not started.")
             try:
@@ -266,4 +278,5 @@ class KittensGame:
                 else:
                     return (None, "You do not have a(n) '" + pick + "'")
             except Exception as e:
-                return (None, "I do not know what a(n) '" + args[2] + "' is (error: " + repr(e) + ")")
+                return (None, "I do not know what a(n) '" + args[2] + "' is (error: "+repr(e)+")")
+        return (None, None)
