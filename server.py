@@ -64,7 +64,7 @@ async def on_message(message):
     elif message.content.startswith('!save'):
         if game.isAdmin(message.author.id):
             pickle.dump(game, open("game.p", "wb"))
-            await message.channel.send("Loaded game.")
+            await message.channel.send("Saved game.")
             return
 
     elif message.content.startswith('!load'):

@@ -34,14 +34,14 @@ class KittensGame:
         self.tellImplodingKitten = True
         self.turnsReversed = False
         self.admins = [
-            269904594526666754,  #Imanton1
-            #374911198010802179, #Zen, leader of the Menagerie
+            269904594526666754,     #Imanton1
+            374911198010802179,     #Zen, leader of the Menagerie
             0
         ]
         self.channels = [
-            595427470430437412, #RYL General
-            601892112245719041, #RYL bot-test
-            #598617801187393762,  #Menagerie General
+            595427470430437412,     #RYL General
+            #601892112245719041,    #RYL bot-test
+            598617801187393762,     #Menagerie General
             0
         ]
     def isAdmin(self, authorid):
@@ -206,7 +206,7 @@ class KittensGame:
             if self.playerCurrent == max(list(self.playersAll.values())):
                 self.currentRoundNumber += 1
 
-            self.playerStartTime = datetime()
+            self.playerStartTime = datetime.now()
             if self.turnsReversed:
                 self.playerCurrent = nextPlayer(list(self.playersAll.values()), self.playerCurrent)
             else:
