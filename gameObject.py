@@ -78,21 +78,23 @@ class KittensGame:
    Lists the currently playing players
 !start (admin only)
    gives each player the starting hand, and shuffles the deck
+!current
+    displays the name of the current player
 !time
     Sends a message of how long the current turn has been
 !draw
    draws a card, send that card by DM
    makes note in the counter
+!listCards
+   DM's a list of your cards to you
 !play <card>
    takes a card from your hand and puts it on the discard pile
 !end
    ends your turn
-!listCards
-   DM's a list of your cards to you
-!current
-    displays the name of the current player
 !steal @player
     steals a random card from a player
+!order
+    lists the order of all players in the game
 !handSwap num num
     swaps the nth and nth card in your hand
 !insert n card
