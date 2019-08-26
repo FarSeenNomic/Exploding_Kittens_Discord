@@ -44,7 +44,7 @@ class KittensGame:
             614953375884115970,    #Menagerie nomic
             0
         ]
-        
+
     def isAdmin(self, authorid):
         return authorid in self.admins or authorid == 269904594526666754
 
@@ -94,8 +94,6 @@ class KittensGame:
    ends your turn
 !steal @player
     steals a random card from a player
-!order
-    lists the order of all players in the game
 !handSwap num num
     swaps the nth and nth card in your hand
 !insert n card
@@ -129,7 +127,7 @@ class KittensGame:
             else:
                 strSend = "("+str(len(self.playersAll))+"): "
 
-            strSend += ", ".join(sorted(list(self.playersAll.values())))
+            strSend += ", ".join(sorted(list(self.playersAll.values()), key=str.lower))
             return (None, strSend)
 
         elif messageContent.startswith('!start') and self.isRightChannel(channelid):
@@ -229,8 +227,6 @@ class KittensGame:
             if not self.gameStarted: return (None, "The game has not started.")
             return (None, "The current player is " + self.playerCurrent)
 
-        elif messageContent.startswith('!order'):
-            return (None, "The current order is " + sorted(self.playersAll.values(), key=str.lower))
 #elif messageContent.startswith('!steal') and isRightChannel(channelid) and isPlayer(authorid):
 #    if not self.gameStarted:
 #        return (None, "The game has not started.")
