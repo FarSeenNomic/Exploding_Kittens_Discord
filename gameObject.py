@@ -41,7 +41,7 @@ class KittensGame:
         self.channels = [
             595427470430437412,     #RYL General
             #601892112245719041,    #RYL bot-test
-            #598617801187393762,    #Menagerie General
+            614953375884115970,    #Menagerie nomic
             0
         ]
     def isAdmin(self, authorid):
@@ -100,7 +100,7 @@ class KittensGame:
     (0 is top, 1 is one card on top... -1 is bottom)
 !admin/adminto (admin only)
     allows change to the python gamestate
-""", None)
+""", "Help has been sent by DM to " + authorname)
         elif messageContent.startswith('!enter') and self.isRightChannel(channelid):
             if self.gameStarted and self.isQuitter(authorid):
                 return (None, authorname + " has left and may not return.")
@@ -225,6 +225,9 @@ class KittensGame:
         elif messageContent.startswith('!current'):
             if not self.gameStarted: return (None, "The game has not started.")
             return (None, "The current player is " + self.playerCurrent)
+
+        elif messageContent.startswith('!order'):
+            return (None, "The current order is " + sorted(self.playersAll.values(), key=str.lower))
 #elif messageContent.startswith('!steal') and isRightChannel(channelid) and isPlayer(authorid):
 #    if not self.gameStarted:
 #        return (None, "The game has not started.")
