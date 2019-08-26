@@ -44,6 +44,7 @@ class KittensGame:
             614953375884115970,    #Menagerie nomic
             0
         ]
+        
     def isAdmin(self, authorid):
         return authorid in self.admins or authorid == 269904594526666754
 
