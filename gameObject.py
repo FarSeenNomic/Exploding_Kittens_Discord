@@ -166,7 +166,7 @@ class KittensGame:
 
         elif messageContent.startswith('!time') and self.isPlayer(authorid):
             if not self.gameStarted: return (None, "The game has not started.")
-            return (None, timedelta(seconds=round(datetime.now() - self.playerStartTime)))
+            return (None, timedelta(seconds=round((datetime.now() - self.playerStartTime).total_seconds())))
 
         elif messageContent.startswith('!draw') and self.isRightChannel(channelid) and self.isPlayer(authorid):
             if not self.gameStarted: return (None, "The game has not started.")
