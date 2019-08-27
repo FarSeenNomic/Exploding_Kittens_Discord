@@ -34,12 +34,12 @@ class KittensGame:
         self.tellImplodingKitten = True
         self.turnsReversed = False
         self.admins = [
-            269904594526666754,     #Imanton1
+            269904594526666754,     #Imanton1, the devoloper
             #374911198010802179,    #Zen, leader of the Menagerie
             0
         ]
         self.channels = [
-            595427470430437412,     #RYL General
+            595427470430437412,     #RYL nomic
             #601892112245719041,    #RYL bot-test
             614953375884115970,    #Menagerie nomic
             0
