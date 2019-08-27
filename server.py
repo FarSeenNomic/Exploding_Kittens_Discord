@@ -36,10 +36,10 @@ async def on_message(message):
         try:
             if len(message.content) >= 7 and game.isAdmin(message.author.id):
                 evalStr = eval(message.content[7:])
-                if evalStr is None:
+                if evalStr is None or len(str(evalStr)) == 0:
                     await message.channel.send("Successful.")
                 else:
-                    await message.channel.send(evalStr)
+                    await message.channel.send(str(evalStr))
                 return
         except Exception as e:
             print(repr(e))
@@ -50,12 +50,12 @@ async def on_message(message):
         try:
             if len(message.content) >= 9 and game.isAdmin(message.author.id):
                 evalStr = eval(message.content[9:])
-                if evalStr is None:
+                if evalStr is None or len(str(evalStr)) == 0:
                     evalStr = "Successful."
                 for person in message.mentions:
                     if (person.dm_channel is None):
                         await person.create_dm()
-                    await person.dm_channel.send(evalStr)
+                    await person.dm_channel.send(str(evalStr))
         except Exception as e:
             print(repr(e))
             await message.channel.send("oops, an error occured:\n"+str(repr(e)))
