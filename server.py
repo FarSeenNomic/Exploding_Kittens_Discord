@@ -32,7 +32,7 @@ async def on_message(message):
         #message is made by a bot
         return
 
-    elif message.content.startswith('!admin '): #runs code and echos to where it came from
+    elif message.content.startswith('!admin '): #runs statment and echos to where it came from
         try:
             if len(message.content) >= 7 and game.isAdmin(message.author.id):
                 evalStr = eval(message.content[7:])
@@ -46,7 +46,18 @@ async def on_message(message):
             await message.channel.send("oops, an error occured:\n"+str(repr(e)))
             return
 
-    elif message.content.startswith('!adminto '):   #runs code and echos to where the mention points
+    elif message.content.startswith('!exec '): #runs exec and echos to where it came from
+        try:
+            if len(message.content) >= 6 and game.isAdmin(message.author.id):
+                exec(message.content[6:])
+                await message.channel.send("Successful.")
+                return
+        except Exception as e:
+            print(repr(e))
+            await message.channel.send("oops, an error occured:\n"+str(repr(e)))
+            return
+
+    elif message.content.startswith('!adminto '):   #runs statment and echos to where the mention points
         try:
             if len(message.content) >= 9 and game.isAdmin(message.author.id):
                 evalStr = eval(message.content[9:])
