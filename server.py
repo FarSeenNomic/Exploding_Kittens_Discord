@@ -46,6 +46,20 @@ async def on_message(message):
             await message.channel.send("oops, an error occured:\n"+str(repr(e)))
             return
 
+    elif message.content.startswith('!awaitadmin '): #runs statment and echos to where it came from
+        try:
+            if len(message.content) >= 11 and game.isAdmin(message.author.id):
+                evalStr = await eval(message.content[11:])
+                if evalStr is None or len(str(evalStr)) == 0:
+                    await message.channel.send("Successful.")
+                else:
+                    await message.channel.send(str(evalStr))
+                return
+        except Exception as e:
+            print(repr(e))
+            await message.channel.send("oops, an error occured:\n"+str(repr(e)))
+            return
+
     elif message.content.startswith('!exec '): #runs exec and echos to where it came from
         try:
             if len(message.content) >= 6 and game.isAdmin(message.author.id):
