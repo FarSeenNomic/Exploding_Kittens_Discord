@@ -212,9 +212,9 @@ class KittensGame:
 
             self.playerStartTime = datetime.now()
             if self.turnsReversed:
-                self.playerCurrent = nextPlayer(list(self.playersAll.values()), self.playerCurrent)
-            else:
                 self.playerCurrent = lastPlayer(list(self.playersAll.values()), self.playerCurrent)
+            else:
+                self.playerCurrent = nextPlayer(list(self.playersAll.values()), self.playerCurrent)
 
             playerID = list(self.playersAll)[list(self.playersAll.values()).index(self.playerCurrent)]
 
