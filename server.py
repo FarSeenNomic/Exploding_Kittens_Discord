@@ -100,7 +100,7 @@ async def on_message(message):
 
     (personal, targeted) = game.do(
         message.content, message.author.id,
-        message.author.name, message.channel.id
+        message.author.display_name, message.channel.id
         )
 
     # personal always goes to the dm channel
